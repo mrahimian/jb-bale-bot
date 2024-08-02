@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  db-core:
+    container_name: jannat_bot_db
+    image: hub.hamdocker.ir/postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: jb-bot
+    ports:
+      - "5432:5432"
