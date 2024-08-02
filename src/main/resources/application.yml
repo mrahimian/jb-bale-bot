@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: user
+    password: pass
+    url: jdbc:postgresql://localhost:5432/jb-bot
+
+
+  application:
+    name: bale-jb-bot
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  threads:
+    virtual:
+      enabled: true
+

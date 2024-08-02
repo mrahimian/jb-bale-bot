@@ -12,7 +12,6 @@ public class Admin {
     private String id;
     private String username;
     private String password;
-    private String chatId;
     private String firstName;
     private String lastName;
     private String nationalCode;
