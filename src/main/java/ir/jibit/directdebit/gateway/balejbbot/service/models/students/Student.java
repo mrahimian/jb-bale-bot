@@ -19,7 +19,7 @@ public class Student {
     private String phoneNumber;
     private String fathersPhoneNumber;
     private String mothersPhoneNumber;
-    private Admin teacher;
+    private String teacher;
     private int score;
 
 }

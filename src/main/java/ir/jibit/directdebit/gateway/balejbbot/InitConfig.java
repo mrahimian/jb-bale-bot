@@ -1,5 +1,6 @@
 package ir.jibit.directdebit.gateway.balejbbot;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
@@ -10,14 +11,22 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Configuration
 public class InitConfig {
 
+    @Value("${bot.bale.students.token}")
+    String botToken;
+
+    @Value("${bot.bale.students.host}")
+    String host;
+
+    @Value("${bot.bale.students.port}")
+    int port;
+
+
     @Bean
     TelegramBotsLongPollingApplication init() throws TelegramApiException {
         TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication();
+        botsApplication.registerBot(botToken, () -> new TelegramUrl("https", host, port),
+                new DefaultGetUpdatesGenerator(), new StudentsBot(botToken, host, port));
 
-        // Register our bot
-        String botToken = "507735893:LXuomDJL9THYsJwep3JRPJauwSM4qzSAITv3mpvf";
-//        botsApplication.registerBot(botToken, new MyAmazingBot(botToken));
-        botsApplication.registerBot(botToken, () -> new TelegramUrl("https", "tapi.bale.ai", 443), new DefaultGetUpdatesGenerator(), new MyAmazingBot(botToken));
         System.out.println("MyAmazingBot successfully started!");
         return botsApplication;
     }
