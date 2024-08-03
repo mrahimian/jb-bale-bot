@@ -5,11 +5,13 @@ import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.PERMISSION_DENIED;
 
+@Service
 public class AdminsApplicationService {
     private final StudentRepository studentRepository;
     private final AdminRepository adminRepository;

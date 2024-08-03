@@ -6,10 +6,12 @@ import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.entities.AwardRequest;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.INSUFFICIENT_SCORE;
 
+@Service
 public class StudentsApplicationService {
     private final StudentRepository studentRepository;
     private final AwardRepository awardRepository;

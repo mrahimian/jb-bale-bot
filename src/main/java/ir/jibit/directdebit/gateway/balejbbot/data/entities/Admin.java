@@ -3,11 +3,13 @@ package ir.jibit.directdebit.gateway.balejbbot.data.entities;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "admin")

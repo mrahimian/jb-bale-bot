@@ -2,7 +2,9 @@ package ir.jibit.directdebit.gateway.balejbbot.exceptions;
 
 public enum Error {
     PERMISSION_DENIED("permission.denied","متاسفانه شما دسترسی برای انجام این کار را ندارید"),
-    INSUFFICIENT_SCORE("insufficient.score","متاسفانه شما امتیاز لازم برای تهیه این جایزه را ندارید")
+    INSUFFICIENT_SCORE("insufficient.score","متاسفانه شما امتیاز لازم برای تهیه این جایزه را ندارید"),
+    INVALID_CREDENTIALS("invalid.credentials","نام کاربری یا رممزعبور اشتباه است"),
+    UNRECOGNIZED_USER("unrecognized.user","کاربر ناشناخته است")
     ;
 
 

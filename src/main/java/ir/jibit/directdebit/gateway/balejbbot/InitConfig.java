@@ -27,7 +27,7 @@ public class InitConfig {
         botsApplication.registerBot(botToken, () -> new TelegramUrl("https", host, port),
                 new DefaultGetUpdatesGenerator(), new StudentsBot(botToken, host, port));
 
-        System.out.println("MyAmazingBot successfully started!");
+        System.out.println("MyBot successfully started!");
         return botsApplication;
     }
 }
