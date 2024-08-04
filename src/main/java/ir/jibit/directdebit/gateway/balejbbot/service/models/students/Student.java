@@ -1,6 +1,5 @@
 package ir.jibit.directdebit.gateway.balejbbot.service.models.students;
 
-import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -22,4 +21,17 @@ public class Student {
     private String teacher;
     private int score;
 
+    @Override
+    public String toString() {
+        return "شناسه ='" + id + '\'' +
+                ", نام ='" + firstName + '\'' +
+                ", نام خانوادگی ='" + lastName + '\'' +
+                ", کدملی ='" + nationalCode + '\'' +
+                ", تاریخ تولد =" + birthDate +
+                ", شماره تلفن ='" + phoneNumber + '\'' +
+                ", شماره تلفن پدر ='" + fathersPhoneNumber + '\'' +
+                ", شماره تلفن مادر ='" + mothersPhoneNumber + '\'' +
+                ", نام مربی ='" + teacher + '\'' +
+                ", امتیاز =" + score;
+    }
 }

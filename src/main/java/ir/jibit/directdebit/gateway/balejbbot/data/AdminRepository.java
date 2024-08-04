@@ -11,4 +11,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     Admin findAdminByChatId(String chatId);
 
     Optional<Admin> findAdminByUsernameAndPassword(String username, String password);
+
+    boolean existsAdminByChatId(String chatId);
 }
