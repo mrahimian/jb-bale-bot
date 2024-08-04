@@ -22,7 +22,15 @@ public class AwardRequest {
     private Award award;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
     @UpdateTimestamp
+    @Column(nullable = false)
     private Instant updatedAt;
+
+    public AwardRequest(Student student, Award award) {
+        this.student = student;
+        this.award = award;
+    }
 }

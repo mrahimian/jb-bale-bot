@@ -17,3 +17,11 @@ spring:
     virtual:
       enabled: true
 
+  main:
+    web-application-type: none
+bot:
+  bale:
+    students:
+      token : 507735893:LXuomDJL9THYsJwep3JRPJauwSM4qzSAITv3mpvf
+      host: tapi.bale.ai
+      port: 443

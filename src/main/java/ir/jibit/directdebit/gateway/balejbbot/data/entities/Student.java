@@ -1,11 +1,15 @@
 package ir.jibit.directdebit.gateway.balejbbot.data.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "student")
 public class Student {
@@ -13,6 +17,7 @@ public class Student {
     private String id;
     private String username;
     private String password;
+    @Column(unique = true)
     private String chatId;
     private String firstName;
     private String lastName;
