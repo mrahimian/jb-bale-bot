@@ -1,6 +1,5 @@
 package ir.jibit.directdebit.gateway.balejbbot.service;
 
-import ir.jibit.directdebit.gateway.balejbbot.data.AdminRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
@@ -24,7 +23,7 @@ public class AdminsApplicationService {
     private final AdminConsumerHandler<UpdateScoreModel> updateScoreHandler;
     private final AdminConsumerHandler<Boolean> giftsTimeHandler;
 
-    public AdminsApplicationService(StudentRepository studentRepository, AdminRepository adminRepository, GiftTimeRepository giftTimeRepository) {
+    public AdminsApplicationService(StudentRepository studentRepository, GiftTimeRepository giftTimeRepository) {
 
         getStudentsHandler = new GetStudentsHandler(studentRepository);
         updateScoreHandler = new UpdateStudentsScoreHandler(studentRepository);

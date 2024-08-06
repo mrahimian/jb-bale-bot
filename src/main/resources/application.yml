@@ -25,3 +25,6 @@ bot:
       token : 507735893:LXuomDJL9THYsJwep3JRPJauwSM4qzSAITv3mpvf
       host: tapi.bale.ai
       port: 443
+
+cache:
+  expire_after_seconds: 900

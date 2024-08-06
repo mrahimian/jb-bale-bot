@@ -1,5 +1,8 @@
 package ir.jibit.directdebit.gateway.balejbbot.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class BotException extends RuntimeException{
     Error error;
 

@@ -1,5 +1,6 @@
 package ir.jibit.directdebit.gateway.balejbbot;
 
+import ir.jibit.directdebit.gateway.balejbbot.bot.StudentsBot;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +21,18 @@ public class InitConfig {
     @Value("${bot.bale.students.port}")
     int port;
 
+    private final StudentsBot studentsBot;
+
+    public InitConfig(StudentsBot studentsBot) {
+        this.studentsBot = studentsBot;
+    }
+
 
     @Bean
     TelegramBotsLongPollingApplication init() throws TelegramApiException {
         TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication();
         botsApplication.registerBot(botToken, () -> new TelegramUrl("https", host, port),
-                new DefaultGetUpdatesGenerator(), new StudentsBot(botToken, host, port));
+                new DefaultGetUpdatesGenerator(), studentsBot);
 
         System.out.println("MyBot successfully started!");
         return botsApplication;

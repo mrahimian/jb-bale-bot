@@ -1,5 +1,6 @@
 package ir.jibit.directdebit.gateway.balejbbot.controller;
 
+import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
 import ir.jibit.directdebit.gateway.balejbbot.service.StudentsApplicationService;
@@ -11,10 +12,14 @@ import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.UNRECOGNIZ
 public class StudentController {
     private final StudentsApplicationService studentsApplicationService;
     private final StudentRepository studentRepository;
+    private final GiftTimeRepository giftTimeRepository;
 
-    public StudentController(StudentsApplicationService studentsApplicationService, StudentRepository studentRepository) {
+    public StudentController(StudentsApplicationService studentsApplicationService, StudentRepository studentRepository,
+                             GiftTimeRepository giftTimeRepository) {
+
         this.studentsApplicationService = studentsApplicationService;
         this.studentRepository = studentRepository;
+        this.giftTimeRepository = giftTimeRepository;
     }
 
     public String getInfo(String chatId) {
@@ -41,6 +46,18 @@ public class StudentController {
         } else {
             throw new BotException(UNRECOGNIZED_USER);
         }
+    }
+
+    public boolean isGiftTimeEnable(String chatId) {
+        if (studentRepository.existsStudentByChatId(chatId)) {
+            if (giftTimeRepository.findById(0L).get().isActive()) {
+                return true;
+            }
+        } else {
+            throw new BotException(UNRECOGNIZED_USER);
+        }
+
+        return false;
     }
 
     public String requestForAward(String chatId, int awardCode) {
