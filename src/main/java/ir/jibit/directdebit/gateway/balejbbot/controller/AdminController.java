@@ -22,16 +22,18 @@ public class AdminController {
     }
 
     public List<Student> getStudents(String chatId) {
-        if (adminRepository.existsAdminByChatId(chatId)) {
-            return adminsApplicationService.getStudents();
+        var admin = adminRepository.findAdminByChatId(chatId);
+        if (admin != null) {
+            return adminsApplicationService.getStudents(admin.getRole());
         } else {
             throw new BotException(UNRECOGNIZED_USER);
         }
     }
 
     public String increaseStudentScore(String chatId, String teacherId, String studentChatId, int scoreToIncrease) {
-        if (adminRepository.existsAdminByChatId(chatId)) {
-            adminsApplicationService.increaseStudentScore(teacherId, studentChatId, scoreToIncrease);
+        var admin = adminRepository.findAdminByChatId(chatId);
+        if (admin != null) {
+            adminsApplicationService.updateStudentScore(admin.getRole(), teacherId, studentChatId, scoreToIncrease, true);
             return "درخواست شما با موفقیت انجام شد✅";
         } else {
             throw new BotException(UNRECOGNIZED_USER);
@@ -39,8 +41,9 @@ public class AdminController {
     }
 
     public String decreaseStudentScore(String chatId, String teacherId, String studentChatId, int scoreToIncrease) {
-        if (adminRepository.existsAdminByChatId(chatId)) {
-            adminsApplicationService.decreaseStudentScore(teacherId, studentChatId, scoreToIncrease);
+        var admin = adminRepository.findAdminByChatId(chatId);
+        if (admin != null) {
+            adminsApplicationService.updateStudentScore(admin.getRole(), teacherId, studentChatId, scoreToIncrease, false);
             return "درخواست شما با موفقیت انجام شد✅";
         } else {
             throw new BotException(UNRECOGNIZED_USER);
@@ -48,8 +51,9 @@ public class AdminController {
     }
 
     public String enableGiftsTime(String chatId) {
-        if (adminRepository.existsAdminByChatId(chatId)) {
-            adminsApplicationService.enableGiftsTime();
+        var admin = adminRepository.findAdminByChatId(chatId);
+        if (admin != null) {
+            adminsApplicationService.updateGiftsTime(admin.getRole(), true);
             return "کمد جوایز فعال شد ✅";
         } else {
             throw new BotException(UNRECOGNIZED_USER);
@@ -57,8 +61,9 @@ public class AdminController {
     }
 
     public String disableGiftsTime(String chatId) {
-        if (adminRepository.existsAdminByChatId(chatId)) {
-            adminsApplicationService.disableGiftsTime();
+        var admin = adminRepository.findAdminByChatId(chatId);
+        if (admin != null) {
+            adminsApplicationService.updateGiftsTime(admin.getRole(), false);
             return "کمد جوایز غیر فعال شد ❌";
         } else {
             throw new BotException(UNRECOGNIZED_USER);

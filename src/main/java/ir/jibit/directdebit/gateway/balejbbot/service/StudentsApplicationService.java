@@ -3,52 +3,40 @@ package ir.jibit.directdebit.gateway.balejbbot.service;
 import ir.jibit.directdebit.gateway.balejbbot.data.AwardRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.AwardRequestRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
-import ir.jibit.directdebit.gateway.balejbbot.data.entities.AwardRequest;
-import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.student.AwardRequestHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.student.GetInformationHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.models.students.AwardRequestModel;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.INSUFFICIENT_SCORE;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Service
 public class StudentsApplicationService {
     private final StudentRepository studentRepository;
-    private final AwardRepository awardRepository;
-    private final AwardRequestRepository awardRequestRepositoryٕ;
+    private final Function<String, Student> getInformationHandler;
+    private final Consumer<AwardRequestModel> awardRequestHandler;
 
 
     public StudentsApplicationService(StudentRepository studentRepository, AwardRepository awardRepository,
-                                      AwardRequestRepository awardRequestRepositoryٕ) {
+                                      AwardRequestRepository awardRequestRepository) {
 
         this.studentRepository = studentRepository;
-        this.awardRepository = awardRepository;
-        this.awardRequestRepositoryٕ = awardRequestRepositoryٕ;
+        getInformationHandler = new GetInformationHandler(studentRepository);
+        awardRequestHandler = new AwardRequestHandler(studentRepository, awardRepository, awardRequestRepository);
+
     }
 
     public Student getInfo(String chatId) {
-        var student = studentRepository.findStudentByChatId(chatId);
-        return new Student(student.getId(),
-                student.getUsername(), null, student.getFirstName(), student.getLastName(), student.getNationalCode(),
-                student.getBirthDate(), student.getPhoneNumber(), student.getFathersPhoneNumber(), student.getMothersPhoneNumber(),
-                student.getTeacher().getLastName(), student.getScore());
+        return getInformationHandler.apply(chatId);
     }
 
     public int getScore(String chatId) {
         return studentRepository.findStudentByChatId(chatId).getScore();
     }
 
-    @Transactional
     public void requestForAward(String chatId, int awardCode) {
-        var student = studentRepository.findStudentByChatId(chatId);
-        var award = awardRepository.findAwardByCode(awardCode);
-        var requiredScore = award.getRequiredScore();
-        var studentScore = student.getScore();
-        if (requiredScore > studentScore) {
-            throw new BotException(INSUFFICIENT_SCORE);
-        }
-
-        student.setScore(studentScore - requiredScore);
-        awardRequestRepositoryٕ.save(new AwardRequest(student, award));
+        awardRequestHandler.accept(new AwardRequestModel(chatId, awardCode));
     }
 }

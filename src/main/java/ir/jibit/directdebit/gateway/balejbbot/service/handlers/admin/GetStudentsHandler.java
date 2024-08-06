@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Permission.FETCH_STUDENTS_LIST;
+
 @Service
 public class GetStudentsHandler implements AdminSupplierHandler<List<Student>> {
     private final StudentRepository studentRepository;
@@ -26,6 +28,6 @@ public class GetStudentsHandler implements AdminSupplierHandler<List<Student>> {
 
     @Override
     public boolean isAllowed(Role role) {
-        return false;
+        return role.getPermissions().stream().anyMatch(FETCH_STUDENTS_LIST::equals);
     }
 }

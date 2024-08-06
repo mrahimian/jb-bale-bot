@@ -4,6 +4,13 @@ import ir.jibit.directdebit.gateway.balejbbot.data.AdminRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.AdminConsumerHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.AdminSupplierHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.admin.GetStudentsHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.admin.GiftsTimeHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.handlers.admin.UpdateStudentsScoreHandler;
+import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
+import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.UpdateScoreModel;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
 import org.springframework.stereotype.Service;
 
@@ -13,48 +20,40 @@ import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.PERMISSION
 
 @Service
 public class AdminsApplicationService {
-    private final StudentRepository studentRepository;
-    private final AdminRepository adminRepository;
-    private final GiftTimeRepository giftTimeRepository;
+    private final AdminSupplierHandler<List<Student>> getStudentsHandler;
+    private final AdminConsumerHandler<UpdateScoreModel> updateScoreHandler;
+    private final AdminConsumerHandler<Boolean> giftsTimeHandler;
 
     public AdminsApplicationService(StudentRepository studentRepository, AdminRepository adminRepository, GiftTimeRepository giftTimeRepository) {
-        this.studentRepository = studentRepository;
-        this.adminRepository = adminRepository;
-        this.giftTimeRepository = giftTimeRepository;
+
+        getStudentsHandler = new GetStudentsHandler(studentRepository);
+        updateScoreHandler = new UpdateStudentsScoreHandler(studentRepository);
+        giftsTimeHandler = new GiftsTimeHandler(giftTimeRepository);
     }
 
-    public List<Student> getStudents() {
-        return studentRepository.findAll().stream().map(student -> new Student(student.getId(),
-                student.getUsername(), null, student.getFirstName(), student.getLastName(), student.getNationalCode(),
-                student.getBirthDate(), student.getPhoneNumber(), student.getFathersPhoneNumber(), student.getMothersPhoneNumber(),
-                student.getTeacher().getLastName(), student.getScore())).toList();
-    }
-
-    public void increaseStudentScore(String teacherId, String studentChatId, int scoreToIncrease) {
-        var student = studentRepository.findStudentByChatId(studentChatId);
-        if (teacherId == null || teacherId.isEmpty() || !teacherId.equals(student.getTeacher().getId())) {
-            throw new BotException(PERMISSION_DENIED);
+    public List<Student> getStudents(Role role) {
+        if (getStudentsHandler.isAllowed(role)) {
+            return getStudentsHandler.get();
         }
 
-        student.setScore(student.getScore() + scoreToIncrease);
-        studentRepository.save(student);
+        throw new BotException(PERMISSION_DENIED);
     }
 
-    public void decreaseStudentScore(String teacherId, String studentChatId, int scoreToDecrease) {
-        var student = studentRepository.findStudentByChatId(studentChatId);
-        if (teacherId == null || teacherId.isEmpty() || !teacherId.equals(student.getTeacher().getId())) {
-            throw new BotException(PERMISSION_DENIED);
+    public void updateStudentScore(Role role, String teacherId, String studentChatId, int score, boolean increase) {
+        if (updateScoreHandler.isAllowed(role)) {
+            updateScoreHandler.accept(new UpdateScoreModel(teacherId, studentChatId, score, increase));
         }
 
-        student.setScore(student.getScore() - scoreToDecrease);
-        studentRepository.save(student);
+        throw new BotException(PERMISSION_DENIED);
     }
 
-    public void enableGiftsTime() {
-        giftTimeRepository.getReferenceById(0L).setActive(true);
+
+    public void updateGiftsTime(Role role, boolean enable) {
+        if (giftsTimeHandler.isAllowed(role)) {
+            giftsTimeHandler.accept(enable);
+        }
+
+        throw new BotException(PERMISSION_DENIED);
     }
 
-    public void disableGiftsTime() {
-        giftTimeRepository.getReferenceById(0L).setActive(false);
-    }
 }
