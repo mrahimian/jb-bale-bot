@@ -1,5 +1,8 @@
 package ir.jibit.directdebit.gateway.balejbbot;
 
+import ir.jibit.directdebit.gateway.balejbbot.controller.AdminController;
+import ir.jibit.directdebit.gateway.balejbbot.controller.CommonController;
+import ir.jibit.directdebit.gateway.balejbbot.controller.StudentController;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.TelegramUrl;
@@ -19,9 +22,15 @@ import java.util.List;
 
 public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
+    private final CommonController commonController;
+    private final StudentController studentController;
 
-    public StudentsBot(String token, String host, int port) {
+    public StudentsBot(String token, String host, int port, CommonController commonController,
+                       StudentController studentController) {
+
         this.telegramClient = new OkHttpTelegramClient(token, new TelegramUrl("https", host, port));
+        this.commonController = commonController;
+        this.studentController = studentController;
     }
 
     @Override
@@ -30,36 +39,49 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
             SendMessage message = null;
             var chatId = update.getMessage().getChatId();
             var messageText = update.getMessage().getText();
-            if (messageText.equals("/start")){
+            if (messageText.startsWith("/start")) {
+                var credentials = messageText.split(" ");
+                var username = credentials[2];
+                var password = credentials[4];
+                var msg = commonController.login(String.valueOf(chatId), username, password, true);
 
-                message = SendMessage // Create a message object
+                message = SendMessage
                         .builder()
                         .chatId(chatId)
-                        .text(messageText)
+                        .text(msg)
                         .replyMarkup(setKeyboard())
                         .build();
             }
-            if (messageText.equals("Button 1")){
-
-                message = SendMessage // Create a message object
+            if (messageText.contains("دیدن اطلاعات خودم")) {
+                var msg = studentController.getInfo(String.valueOf(chatId));
+                message = SendMessage
                         .builder()
                         .chatId(chatId)
-                        .text(messageText)
-                        .replyMarkup(InlineKeyboardMarkup
-                                .builder()
-                                .keyboardRow(
-                                        new InlineKeyboardRow(InlineKeyboardButton
-                                                .builder()
-                                                .text("Update message text")
-                                                .callbackData("update_msg_text")
-                                                .build()
-                                        )
-                                )
-                                .build())
+                        .text(msg)
                         .build();
             }
 
+            if (messageText.contains("امتیاز من")) {
+                var msg = studentController.getScore(String.valueOf(chatId));
+                message = SendMessage
+                        .builder()
+                        .chatId(chatId)
+                        .text(msg)
+                        .build();
+            }
 
+            if (messageText.contains("کمد جوایز")) {
+                var msg = studentController.getAwards(String.valueOf(chatId));
+                message = SendMessage
+                        .builder()
+                        .chatId(chatId)
+                        .text(msg)
+                        .build();
+            }
+
+            if (messageText.contains("درخواست جایزه")) {
+
+            }
 
 
 //            SendMessage message = SendMessage
@@ -75,22 +97,36 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
 
+//    message = SendMessage // Create a message object
+//                        .builder()
+//                        .chatId(chatId)
+//                        .text(messageText)
+//                        .replyMarkup(InlineKeyboardMarkup
+//                                .builder()
+//                                .keyboardRow(
+//                                        new InlineKeyboardRow(InlineKeyboardButton
+//                                                .builder()
+//                                                .text("Update message text")
+//                                                .callbackData("update_msg_text")
+//                                                .build()
+//                                        )
+//                                )
+//                                .build())
+//                        .build();
+
 
     private ReplyKeyboardMarkup setKeyboard() {
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
-        // First row of buttons
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(new KeyboardButton("Button 1"));
-        row1.add(new KeyboardButton("Button 2"));
+        row1.add(new KeyboardButton("دیدن اطلاعات خودم ℹ\uFE0F"));
+        row1.add(new KeyboardButton("امتیاز من \uD83C\uDFC6"));
 
-        // Second row of buttons
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(new KeyboardButton("Button 3"));
-        row2.add(new KeyboardButton("Button 4"));
+        row2.add(new KeyboardButton("کمد جوایز \uD83C\uDF81"));
+        row2.add(new KeyboardButton("درخواست جایزه ⚽\uFE0F\uD83C\uDFC0"));
 
-        // Add rows to the keyboard
         keyboard.add(row1);
         keyboard.add(row2);
 

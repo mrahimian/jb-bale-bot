@@ -34,6 +34,15 @@ public class StudentController {
         }
     }
 
+    public String getAwards(String chatId) {
+        if (studentRepository.existsStudentByChatId(chatId)) {
+            return studentsApplicationService.getAwards().toString();
+            //todo set return pattern
+        } else {
+            throw new BotException(UNRECOGNIZED_USER);
+        }
+    }
+
     public String requestForAward(String chatId, int awardCode) {
         if (studentRepository.existsStudentByChatId(chatId)) {
             studentsApplicationService.requestForAward(chatId, awardCode);

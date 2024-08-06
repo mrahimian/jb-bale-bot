@@ -29,7 +29,7 @@ public class CommonApplicationService {
 
     }
 
-    public void login(boolean isStudent, String username, String password, String chatId) {
+    public String login(String chatId, String username, String password, boolean isStudent) {
         if (isStudent) {
             var result = studentRepository.findStudentByUsernameAndPassword(username, password);
             if (result.isEmpty()) {
@@ -39,6 +39,7 @@ public class CommonApplicationService {
             var student = result.get();
             student.setChatId(chatId);
             studentRepository.save(student);
+            return student.getFirstName() + " " + student.getLastName();
         } else {
             var result = adminRepository.findAdminByUsernameAndPassword(username, password);
             if (result.isEmpty()) {
@@ -48,6 +49,7 @@ public class CommonApplicationService {
             var admin = result.get();
             admin.setChatId(chatId);
             adminRepository.save(admin);
+            return admin.getFirstName() + " " + admin.getLastName();
         }
     }
 }

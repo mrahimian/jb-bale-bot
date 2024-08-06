@@ -20,6 +20,7 @@
         <postgresql.version>42.7.3</postgresql.version>
         <postgresql.version>42.7.3</postgresql.version>
         <telegram-bot-abilities>7.7.1</telegram-bot-abilities>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
     <dependencies>
         <dependency>
@@ -56,10 +57,18 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
+
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-abilities</artifactId>
             <version>${telegram-bot-abilities}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
