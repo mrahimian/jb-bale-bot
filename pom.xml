@@ -21,6 +21,8 @@
         <postgresql.version>42.7.3</postgresql.version>
         <telegram-bot-abilities>7.7.1</telegram-bot-abilities>
         <caffeine.version>3.1.8</caffeine.version>
+        <apache-poi.version>5.2.5</apache-poi.version>
+        <persian.date.time.version>4.1.0</persian.date.time.version>
     </properties>
     <dependencies>
         <dependency>
@@ -56,6 +58,7 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
+
         <dependency>
 
             <groupId>org.telegram</groupId>
@@ -68,6 +71,25 @@
             <artifactId>caffeine</artifactId>
             <version>${caffeine.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.mfathi91</groupId>
+            <artifactId>persian-date-time</artifactId>
+            <version>${persian.date.time.version}</version>
+        </dependency>
+
 
     </dependencies>
 

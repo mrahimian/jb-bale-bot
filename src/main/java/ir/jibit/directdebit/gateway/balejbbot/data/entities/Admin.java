@@ -25,12 +25,17 @@ public class Admin {
     private String nationalCode;
     private Instant birthDate;
     private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
     private int groupNumber;
+
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
     @UpdateTimestamp
+    @Column(nullable = false)
     private Instant updatedAt;
 }

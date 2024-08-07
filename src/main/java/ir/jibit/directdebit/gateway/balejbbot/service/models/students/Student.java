@@ -1,10 +1,11 @@
 package ir.jibit.directdebit.gateway.balejbbot.service.models.students;
 
+import com.github.mfathi91.time.PersianDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
-import java.time.Instant;
-
+@Getter
 @Builder
 @AllArgsConstructor
 public class Student {
@@ -14,12 +15,28 @@ public class Student {
     private String firstName;
     private String lastName;
     private String nationalCode;
-    private Instant birthDate;
+    private String birthDate;
     private String phoneNumber;
     private String fathersPhoneNumber;
     private String mothersPhoneNumber;
     private String teacher;
     private int score;
+
+    public Student(String id, String username, String password, String firstName, String lastName, String nationalCode,
+                   String birthDate, String phoneNumber, String fathersPhoneNumber, String mothersPhoneNumber, String teacher) {
+
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nationalCode = nationalCode;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.fathersPhoneNumber = fathersPhoneNumber;
+        this.mothersPhoneNumber = mothersPhoneNumber;
+        this.teacher = teacher;
+    }
 
     @Override
     public String toString() {

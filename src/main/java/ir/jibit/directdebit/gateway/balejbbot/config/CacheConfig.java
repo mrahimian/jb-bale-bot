@@ -3,6 +3,7 @@ package ir.jibit.directdebit.gateway.balejbbot.config;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import ir.jibit.directdebit.gateway.balejbbot.bot.State;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ public class CacheConfig {
                 .build();
     }
 
+    @Getter
     public static class StateObject {
         State state;
         Object object;

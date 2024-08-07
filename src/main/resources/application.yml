@@ -22,9 +22,14 @@ spring:
 bot:
   bale:
     students:
-      token : 507735893:LXuomDJL9THYsJwep3JRPJauwSM4qzSAITv3mpvf
+      token: 507735893:LXuomDJL9THYsJwep3JRPJauwSM4qzSAITv3mpvf
+      host: tapi.bale.ai
+      port: 443
+    admins:
+      token: 1752308156:WwLRkZOkPW97AezhzQgjK1czu95xar9w4CPMGQRy
       host: tapi.bale.ai
       port: 443
 
+
 cache:
-  expire_after_seconds: 900
+  expire_after_seconds: 9000

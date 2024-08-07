@@ -30,20 +30,20 @@ public class AdminController {
         }
     }
 
-    public String increaseStudentScore(String chatId, String teacherId, String studentChatId, int scoreToIncrease) {
+    public String increaseStudentScore(String chatId, String[] studentChatId, int scoreToIncrease) {
         var admin = adminRepository.findAdminByChatId(chatId);
         if (admin != null) {
-            adminsApplicationService.updateStudentScore(admin.getRole(), teacherId, studentChatId, scoreToIncrease, true);
+            adminsApplicationService.updateStudentScore(admin.getRole(), studentChatId, scoreToIncrease, true);
             return "درخواست شما با موفقیت انجام شد✅";
         } else {
             throw new BotException(UNRECOGNIZED_USER);
         }
     }
 
-    public String decreaseStudentScore(String chatId, String teacherId, String studentChatId, int scoreToIncrease) {
+    public String decreaseStudentScore(String chatId, String[] studentChatId, int scoreToIncrease) {
         var admin = adminRepository.findAdminByChatId(chatId);
         if (admin != null) {
-            adminsApplicationService.updateStudentScore(admin.getRole(), teacherId, studentChatId, scoreToIncrease, false);
+            adminsApplicationService.updateStudentScore(admin.getRole(), studentChatId, scoreToIncrease, false);
             return "درخواست شما با موفقیت انجام شد✅";
         } else {
             throw new BotException(UNRECOGNIZED_USER);

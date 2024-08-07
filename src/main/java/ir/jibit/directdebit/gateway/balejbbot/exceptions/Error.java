@@ -9,7 +9,9 @@ public enum Error {
     INVALID_CREDENTIALS("invalid.credentials","نام کاربری یا رمزعبور اشتباه است"),
     UNRECOGNIZED_USER("unrecognized.user","کاربر ناشناخته است"),
     GIFTS_TIME_NOT_ACTIVE("gifts.time.not_active","کمد جوایز فعال نمی‌باشد"),
-    SERVER_ERROR("server.error", "متاسفانه اشکالی در سیستم رخ داده است")
+    SERVER_ERROR("server.error", "متاسفانه اشکالی در سیستم رخ داده است"),
+    INVALID_INPUT("invalid.input","ورودی نامعتبر است"),
+    AWARD_NOT_EXISTS("award.not_exists","کد جایزه اشتباهه \uD83D\uDE10"),
     ;
 
 

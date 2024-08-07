@@ -3,16 +3,13 @@ package ir.jibit.directdebit.gateway.balejbbot.service.handlers.admin;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
 import ir.jibit.directdebit.gateway.balejbbot.service.handlers.AdminConsumerHandler;
-import ir.jibit.directdebit.gateway.balejbbot.service.handlers.AdminSupplierHandler;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.UpdateScoreModel;
-import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Arrays;
 
-import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.PERMISSION_DENIED;
-import static ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Permission.FETCH_STUDENTS_LIST;
 import static ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Permission.UPDATE_STUDENTS_SCORE;
 
 @Service
@@ -23,20 +20,28 @@ public class UpdateStudentsScoreHandler implements AdminConsumerHandler<UpdateSc
         this.studentRepository = studentRepository;
     }
 
+    @Transactional
     @Override
     public void accept(UpdateScoreModel model) {
-        var student = studentRepository.findStudentByChatId(model.studentChatId());
-        var teacherId = model.teacherId();
-        if (teacherId == null || teacherId.isEmpty() || !teacherId.equals(student.getTeacher().getId())) {
-            throw new BotException(PERMISSION_DENIED);
-        }
+        Arrays.stream(model.studentIds()).parallel().forEach(studentId -> {
 
-        if (model.increase()) {
-            student.setScore(student.getScore() + model.score());
-        } else {
-            student.setScore(student.getScore() - model.score());
-        }
-        studentRepository.save(student);
+            var student = studentRepository.findById(Long.valueOf(studentId));
+//        var teacherId = model.teacherId();
+//        if (teacherId == null || teacherId.isEmpty() || !teacherId.equals(student.getTeacher().getId())) {
+//            throw new BotException(PERMISSION_DENIED);
+//        }
+            if (student.isEmpty()) {
+                throw new BotException(String.format("متربی با شناسه %s یافت نشد", studentId));
+            }
+
+            var st = student.get();
+            if (model.increase()) {
+                st.setScore(st.getScore() + model.score());
+            } else {
+                st.setScore(st.getScore() - model.score());
+            }
+            studentRepository.save(st);
+        });
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ir.jibit.directdebit.gateway.balejbbot.service;
 
+import ir.jibit.directdebit.gateway.balejbbot.data.AdminRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
 import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
@@ -23,9 +24,10 @@ public class AdminsApplicationService {
     private final AdminConsumerHandler<UpdateScoreModel> updateScoreHandler;
     private final AdminConsumerHandler<Boolean> giftsTimeHandler;
 
-    public AdminsApplicationService(StudentRepository studentRepository, GiftTimeRepository giftTimeRepository) {
+    public AdminsApplicationService(StudentRepository studentRepository, AdminRepository adminRepository,
+                                    GiftTimeRepository giftTimeRepository) {
 
-        getStudentsHandler = new GetStudentsHandler(studentRepository);
+        getStudentsHandler = new GetStudentsHandler(studentRepository, adminRepository);
         updateScoreHandler = new UpdateStudentsScoreHandler(studentRepository);
         giftsTimeHandler = new GiftsTimeHandler(giftTimeRepository);
     }
@@ -38,9 +40,9 @@ public class AdminsApplicationService {
         throw new BotException(PERMISSION_DENIED);
     }
 
-    public void updateStudentScore(Role role, String teacherId, String studentChatId, int score, boolean increase) {
+    public void updateStudentScore(Role role, String[] studentChatId, int score, boolean increase) {
         if (updateScoreHandler.isAllowed(role)) {
-            updateScoreHandler.accept(new UpdateScoreModel(teacherId, studentChatId, score, increase));
+            updateScoreHandler.accept(new UpdateScoreModel(studentChatId, score, increase));
         }
 
         throw new BotException(PERMISSION_DENIED);

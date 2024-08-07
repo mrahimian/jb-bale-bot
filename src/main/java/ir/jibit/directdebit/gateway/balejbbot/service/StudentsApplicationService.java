@@ -1,9 +1,6 @@
 package ir.jibit.directdebit.gateway.balejbbot.service;
 
-import ir.jibit.directdebit.gateway.balejbbot.data.AwardRepository;
-import ir.jibit.directdebit.gateway.balejbbot.data.AwardRequestRepository;
-import ir.jibit.directdebit.gateway.balejbbot.data.GiftTimeRepository;
-import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
+import ir.jibit.directdebit.gateway.balejbbot.data.*;
 import ir.jibit.directdebit.gateway.balejbbot.service.handlers.student.AwardRequestHandler;
 import ir.jibit.directdebit.gateway.balejbbot.service.handlers.student.GetAwardsHandler;
 import ir.jibit.directdebit.gateway.balejbbot.service.handlers.student.GetInformationHandler;
@@ -25,11 +22,12 @@ public class StudentsApplicationService {
     private final Supplier<List<Award>> getAwardsHandler;
 
 
-    public StudentsApplicationService(StudentRepository studentRepository, AwardRepository awardRepository,
-                                      AwardRequestRepository awardRequestRepository, GiftTimeRepository giftTimeRepository) {
+    public StudentsApplicationService(StudentRepository studentRepository, AdminRepository adminRepository,
+                                      AwardRepository awardRepository, AwardRequestRepository awardRequestRepository,
+                                      GiftTimeRepository giftTimeRepository) {
 
         this.studentRepository = studentRepository;
-        getInformationHandler = new GetInformationHandler(studentRepository);
+        getInformationHandler = new GetInformationHandler(studentRepository, adminRepository);
         awardRequestHandler = new AwardRequestHandler(studentRepository, awardRepository, awardRequestRepository, giftTimeRepository);
         getAwardsHandler = new GetAwardsHandler(awardRepository);
 

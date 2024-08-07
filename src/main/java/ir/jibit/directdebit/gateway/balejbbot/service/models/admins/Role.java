@@ -11,7 +11,10 @@ public enum Role {
     MANAGER(List.of(
             FETCH_STUDENTS_LIST,
             UPDATE_STUDENTS_SCORE,
-            UPDATE_GIFTS_TIME
+            UPDATE_GIFTS_TIME,
+            INSERT_STUDENTS,
+            INSERT_ADMINS,
+            INSERT_AWARDS
     )),
     TEACHER(List.of(
             FETCH_STUDENTS_LIST,
@@ -21,9 +24,12 @@ public enum Role {
             UPDATE_STUDENTS_SCORE)),
     PRODUCER(List.of(FETCH_STUDENTS_LIST,
             UPDATE_STUDENTS_SCORE,
-            UPDATE_GIFTS_TIME)),
+            UPDATE_GIFTS_TIME,
+            INSERT_AWARDS)),
     SUPPLIER(List.of(FETCH_STUDENTS_LIST)),
-    CONTACT_PERSON(List.of(FETCH_STUDENTS_LIST));
+    CONTACT_PERSON(List.of(FETCH_STUDENTS_LIST,
+            INSERT_STUDENTS,
+            INSERT_ADMINS));
 
 
     private final List<Permission> permissions;
@@ -33,4 +39,4 @@ public enum Role {
     }
 
 
-    }
+}

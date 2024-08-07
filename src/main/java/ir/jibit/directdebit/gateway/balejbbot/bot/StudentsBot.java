@@ -5,11 +5,9 @@ import ir.jibit.directdebit.gateway.balejbbot.config.CacheConfig;
 import ir.jibit.directdebit.gateway.balejbbot.controller.CommonController;
 import ir.jibit.directdebit.gateway.balejbbot.controller.StudentController;
 import ir.jibit.directdebit.gateway.balejbbot.exceptions.BotException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
-import org.telegram.telegrambots.meta.TelegramUrl;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -22,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ir.jibit.directdebit.gateway.balejbbot.bot.State.REQUEST_FOR_AWARD;
+import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.INVALID_INPUT;
 import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.SERVER_ERROR;
 
-@Component
 public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
     @Value("${bot.bale.students.token}")
     String botToken;
@@ -40,9 +38,11 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
     private final StudentController studentController;
     private final Cache<String, CacheConfig.StateObject> states;
 
-    public StudentsBot(CommonController commonController, StudentController studentController, Cache states) {
+    public StudentsBot(TelegramClient telegramClient, CommonController commonController, StudentController studentController,
+                       Cache states) {
+
+        this.telegramClient = telegramClient;
         this.states = states;
-        this.telegramClient = new OkHttpTelegramClient(botToken, new TelegramUrl("https", host, port));
         this.commonController = commonController;
         this.studentController = studentController;
     }
@@ -73,6 +73,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chatId)
                             .text(msg)
+                            .replyMarkup(setKeyboard())
                             .build();
                 }
 
@@ -82,6 +83,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chatId)
                             .text(msg)
+                            .replyMarkup(setKeyboard())
                             .build();
                 }
 
@@ -91,6 +93,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chatId)
                             .text(msg)
+                            .replyMarkup(setKeyboard())
                             .build();
                 }
 
@@ -107,7 +110,27 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                                 .builder()
                                 .chatId(chatId)
                                 .text("کمد جوایز در حال حاضر فعال نمی‌باشد. \uD83D\uDE22")
+                                .replyMarkup(setKeyboard())
                                 .build();
+                    }
+                }
+
+                if (states.asMap().containsKey(String.valueOf(chatId))) {
+                    switch (states.getIfPresent(String.valueOf(chatId)).getState()) {
+                        case REQUEST_FOR_AWARD -> {
+                            if (!StringUtils.isNumeric(toEnglishNumbers(messageText))) {
+                                throw new BotException(INVALID_INPUT);
+                            }
+
+                            var msg = studentController.requestForAward(String.valueOf(chatId), Integer.parseInt(messageText));
+                            message = SendMessage
+                                    .builder()
+                                    .chatId(chatId)
+                                    .text(msg)
+                                    .replyMarkup(setKeyboard())
+                                    .build();
+                        }
+                        default -> throw new Exception();
                     }
                 }
 
@@ -115,13 +138,15 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                 message = SendMessage
                         .builder()
                         .chatId(chatId)
-                        .text(e.getError().getMessage())
+                        .text(e.getError() != null ? e.getError().getMessage() : e.getMessage())
+                        .replyMarkup(setKeyboard())
                         .build();
             } catch (Exception e) {
                 message = SendMessage
                         .builder()
                         .chatId(chatId)
                         .text(SERVER_ERROR.getMessage())
+                        .replyMarkup(setKeyboard())
                         .build();
             }
             try {
@@ -131,24 +156,6 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
             }
         }
     }
-
-//    message = SendMessage // Create a message object
-//                        .builder()
-//                        .chatId(chatId)
-//                        .text(messageText)
-//                        .replyMarkup(InlineKeyboardMarkup
-//                                .builder()
-//                                .keyboardRow(
-//                                        new InlineKeyboardRow(InlineKeyboardButton
-//                                                .builder()
-//                                                .text("Update message text")
-//                                                .callbackData("update_msg_text")
-//                                                .build()
-//                                        )
-//                                )
-//                                .build())
-//                        .build();
-
 
     private ReplyKeyboardMarkup setKeyboard() {
 
@@ -169,5 +176,22 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                 .builder()
                 .keyboard(keyboard)
                 .build();
+    }
+
+    private String toEnglishNumbers(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        return input.replace('۰', '0')
+                .replace('۱', '1')
+                .replace('۲', '2')
+                .replace('۳', '3')
+                .replace('۴', '4')
+                .replace('۵', '5')
+                .replace('۶', '6')
+                .replace('۷', '7')
+                .replace('۸', '8')
+                .replace('۹', '9');
     }
 }
