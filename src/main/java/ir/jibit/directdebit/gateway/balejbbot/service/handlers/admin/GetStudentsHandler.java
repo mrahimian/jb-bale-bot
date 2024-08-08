@@ -28,7 +28,7 @@ public class GetStudentsHandler implements AdminSupplierHandler<List<Student>> {
             return new Student(student.getId(),
                     student.getUsername(), null, student.getFirstName(), student.getLastName(), student.getNationalCode(),
                     student.getBirthDate(), student.getPhoneNumber(), student.getFathersPhoneNumber(), student.getMothersPhoneNumber(),
-                    teacher.get().getLastName(), student.getScore());
+                    !teacher.isEmpty() ? teacher.get().getLastName() : "", student.getScore());
         }).toList();
     }
 

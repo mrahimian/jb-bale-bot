@@ -67,7 +67,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .replyMarkup(setKeyboard())
                             .build();
                 }
-                if (messageText.contains("دیدن اطلاعات خودم")) {
+                if (update.getMessage().hasText() && messageText.contains("دیدن اطلاعات خودم")) {
                     var msg = studentController.getInfo(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
@@ -77,7 +77,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .build();
                 }
 
-                if (messageText.contains("امتیاز من")) {
+                if (update.getMessage().hasText() && messageText.contains("امتیاز من")) {
                     var msg = studentController.getScore(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
@@ -87,8 +87,8 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .build();
                 }
 
-                if (messageText.contains("کمد جوایز")) {
-                    var msg = studentController.getAwards(String.valueOf(chatId));
+                if (update.getMessage().hasText() && messageText.contains("کمد جوایز")) {
+                    var msg = commonController.getAwards(String.valueOf(chatId), true);
                     message = SendMessage
                             .builder()
                             .chatId(chatId)
@@ -97,7 +97,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .build();
                 }
 
-                if (messageText.contains("درخواست جایزه")) {
+                if (update.getMessage().hasText() && messageText.contains("درخواست جایزه")) {
                     if (studentController.isGiftTimeEnable(String.valueOf(chatId))) {
                         message = SendMessage
                                 .builder()

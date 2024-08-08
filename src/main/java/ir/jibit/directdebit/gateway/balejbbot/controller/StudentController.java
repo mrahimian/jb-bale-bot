@@ -39,15 +39,6 @@ public class StudentController {
         }
     }
 
-    public String getAwards(String chatId) {
-        if (studentRepository.existsStudentByChatId(chatId)) {
-            return studentsApplicationService.getAwards().toString();
-            //todo set return pattern
-        } else {
-            throw new BotException(UNRECOGNIZED_USER);
-        }
-    }
-
     public boolean isGiftTimeEnable(String chatId) {
         if (studentRepository.existsStudentByChatId(chatId)) {
             if (giftTimeRepository.findById(0L).get().isActive()) {

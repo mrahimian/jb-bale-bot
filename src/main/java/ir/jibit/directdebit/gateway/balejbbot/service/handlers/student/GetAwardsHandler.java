@@ -19,8 +19,7 @@ public class GetAwardsHandler implements Supplier<List<Award>> {
     @Override
     public List<Award> get() {
         return awardRepository.findAll().stream()
-                .map(award -> new Award(award.getId(), award.getName(), award.getCode(), award.getDescription(),
-                        award.getRequiredScore()))
+                .map(award -> new Award(award.getName(), award.getCode(), award.getDescription(), award.getRequiredScore()))
                 .toList();
     }
 }

@@ -14,7 +14,6 @@ import static ir.jibit.directdebit.gateway.balejbbot.exceptions.Error.UNRECOGNIZ
 public class AdminController {
     private final AdminsApplicationService adminsApplicationService;
     private final AdminRepository adminRepository;
-    private final static String SPECIAL_CHARS = "✅⚡ ✨❌⛔⭕";
 
     public AdminController(AdminsApplicationService adminsApplicationService, AdminRepository adminRepository) {
         this.adminsApplicationService = adminsApplicationService;

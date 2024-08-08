@@ -53,7 +53,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                     var credentials = messageText.split(" ");
                     var username = credentials[2];
                     var password = credentials[4];
-                    var msg = commonController.login(String.valueOf(chatId), username, password, true);
+                    var msg = commonController.login(String.valueOf(chatId), username, password, false);
 
                     message = SendMessage
                             .builder()
@@ -75,6 +75,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chatId)
                             .text("شناسه متربیانی که قصد امتیاز دادن به آنها دارید را وارد کنید و سپس یک * گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال : 100-101-102 * 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز دریافت کنند.")
+                            .replyMarkup(setKeyboard())
                             .build();
                 } else if (update.getMessage().hasText() && messageText.contains("امتیاز منفی")) {
                     states.put(String.valueOf(chatId), new CacheConfig.StateObject(SCORE_DECREASE));
@@ -82,6 +83,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chatId)
                             .text("شناسه متربیانی که قصد کم کردن امتیاز از آنها دارید را وارد کنید و سپس یک * گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال : 100-101-102 * 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز منفی دریافت کنند.")
+                            .replyMarkup(setKeyboard())
                             .build();
                 } else if (update.getMessage().hasText() && messageText.contains("غیر فعال کردن کمد")) {
                     var msg = adminController.disableGiftsTime(String.valueOf(chatId));
@@ -99,12 +101,37 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
+                } else if (update.getMessage().hasText() && messageText.contains("کمد جوایز")) {
+                    var msg = commonController.getAwards(String.valueOf(chatId), false);
+                    message = SendMessage
+                            .builder()
+                            .chatId(chatId)
+                            .text(msg)
+                            .replyMarkup(setKeyboard())
+                            .build();
                 } else if (update.getMessage().hasText() && messageText.contains("بارگذاری لیست متربیان")) {
                     states.put(String.valueOf(chatId), new CacheConfig.StateObject(STUDENT_INSERTION));
                     message = SendMessage
                             .builder()
                             .chatId(chatId)
                             .text("لطفا فایل اکسل را وارد نمایید.")
+                            .replyMarkup(setKeyboard())
+                            .build();
+                } else if (update.getMessage().hasText() && messageText.contains("بارگذاری لیست مربیان")) {
+                    states.put(String.valueOf(chatId), new CacheConfig.StateObject(ADMIN_INSERTION));
+                    message = SendMessage
+                            .builder()
+                            .chatId(chatId)
+                            .text("لطفا فایل اکسل را وارد نمایید.")
+                            .replyMarkup(setKeyboard())
+                            .build();
+                } else if (update.getMessage().hasText() && messageText.contains("بارگذاری لیست جوایز")) {
+                    states.put(String.valueOf(chatId), new CacheConfig.StateObject(AWARD_INSERTION));
+                    message = SendMessage
+                            .builder()
+                            .chatId(chatId)
+                            .text("لطفا فایل اکسل را وارد نمایید.")
+                            .replyMarkup(setKeyboard())
                             .build();
                 } else {
                     if (states.asMap().containsKey(String.valueOf(chatId))) {
@@ -129,7 +156,33 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             }
                             case STUDENT_INSERTION -> {
                                 var document = update.getMessage().getDocument();
-                                commonController.insertStudents(String.valueOf(chatId), document.getFileId());
+                                var msg = commonController.insertStudents(String.valueOf(chatId), document.getFileId());
+                                message = SendMessage
+                                        .builder()
+                                        .chatId(chatId)
+                                        .text(msg)
+                                        .replyMarkup(setKeyboard())
+                                        .build();
+                            }
+                            case ADMIN_INSERTION -> {
+                                var document = update.getMessage().getDocument();
+                                var msg = commonController.insertAdmins(String.valueOf(chatId), document.getFileId());
+                                message = SendMessage
+                                        .builder()
+                                        .chatId(chatId)
+                                        .text(msg)
+                                        .replyMarkup(setKeyboard())
+                                        .build();
+                            }
+                            case AWARD_INSERTION -> {
+                                var document = update.getMessage().getDocument();
+                                var msg = commonController.insertAwards(String.valueOf(chatId), document.getFileId());
+                                message = SendMessage
+                                        .builder()
+                                        .chatId(chatId)
+                                        .text(msg)
+                                        .replyMarkup(setKeyboard())
+                                        .build();
                             }
                             default -> throw new Exception();
                         }
@@ -144,6 +197,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                         .replyMarkup(setKeyboard())
                         .build();
             } catch (Exception e) {
+                e.printStackTrace();
                 message = SendMessage
                         .builder()
                         .chatId(chatId)
@@ -152,6 +206,15 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                         .build();
             }
             try {
+                if (message == null) {
+                    message = SendMessage
+                            .builder()
+                            .chatId(chatId)
+                            .text("منوی اصلی ↪\uFE0F")
+                            .replyMarkup(setKeyboard())
+                            .build();
+                }
+
                 telegramClient.execute(message);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
@@ -182,25 +245,35 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
 
         var row1 = new KeyboardRow();
         row1.add(new KeyboardButton("اطلاعات متربیان ℹ\uFE0F"));
+        row1.add(new KeyboardButton("کمد جوایز \uD83C\uDF81"));
 
         var row2 = new KeyboardRow();
         row2.add(new KeyboardButton("امتیاز مثبت ✔\uFE0F"));
         row2.add(new KeyboardButton("امتیاز منفی ✖\uFE0F"));
 
         var row3 = new KeyboardRow();
-        row3.add(new KeyboardButton("فعال کردن کمد جوایز"));
-        row3.add(new KeyboardButton("غیر فعال کردن کمد جوایز"));
+        row3.add(new KeyboardButton("فعال کردن کمد جوایز \uD83E\uDD29"));
 
         var row4 = new KeyboardRow();
-        row4.add(new KeyboardButton("بارگذاری لیست متربیان"));
-        row4.add(new KeyboardButton("بارگذاری لیست مربیان"));
-        row4.add(new KeyboardButton("بارگذاری لیست جوایز"));
+        row4.add(new KeyboardButton("غیر فعال کردن کمد جوایز ☹\uFE0F"));
+
+        var row5 = new KeyboardRow();
+        row5.add(new KeyboardButton("بارگذاری لیست متربیان \uD83E\uDDD1\u200D\uD83D\uDCBC"));
+
+        var row6 = new KeyboardRow();
+        row6.add(new KeyboardButton("بارگذاری لیست مربیان \uD83D\uDC68\u200D\uD83D\uDCBC"));
+
+        var row7 = new KeyboardRow();
+        row7.add(new KeyboardButton("بارگذاری لیست جوایز \uD83C\uDFC6"));
 
 
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
         keyboard.add(row4);
+        keyboard.add(row5);
+        keyboard.add(row6);
+        keyboard.add(row7);
 
         return ReplyKeyboardMarkup
                 .builder()
