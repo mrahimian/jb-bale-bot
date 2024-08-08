@@ -31,7 +31,7 @@ public class AwardRequestHandler implements Consumer<AwardRequestModel> {
     @Transactional
     @Override
     public void accept(AwardRequestModel awardRequestModel) {
-        if (giftTimeRepository.findById(0L).get().isActive()) {
+        if (giftTimeRepository.findById("0").get().isActive()) {
             var student = studentRepository.findStudentByChatId(awardRequestModel.chatId());
             var award = awardRepository.findAwardByCode(awardRequestModel.awardCode());
             if (award == null) {
@@ -46,6 +46,7 @@ public class AwardRequestHandler implements Consumer<AwardRequestModel> {
 
             student.setScore(studentScore - requiredScore);
             awardRequestRepository.save(new AwardRequest(student, award));
+            studentRepository.save(student);
         } else {
             throw new BotException(GIFTS_TIME_NOT_ACTIVE);
         }

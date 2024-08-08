@@ -18,10 +18,10 @@ public class GetInformationHandler implements Function<String, Student> {
     @Override
     public Student apply(String chatId) {
         var student = studentRepository.findStudentByChatId(chatId);
-        var teacher = adminRepository.findById(Long.valueOf(student.getTeacherId()));
+        var teacher = adminRepository.findById(student.getTeacherId());
         return new Student(student.getId(),
                 student.getUsername(), null, student.getFirstName(), student.getLastName(), student.getNationalCode(),
                 student.getBirthDate(), student.getPhoneNumber(), student.getFathersPhoneNumber(), student.getMothersPhoneNumber(),
-                teacher.get().getLastName(), student.getScore());
+                teacher.isPresent() ? "آقای " + teacher.get().getLastName() : "", student.getScore());
     }
 }

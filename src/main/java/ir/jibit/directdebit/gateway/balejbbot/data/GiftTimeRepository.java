@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface GiftTimeRepository extends JpaRepository<GiftTime, Long> {
+public interface GiftTimeRepository extends JpaRepository<GiftTime, String> {
 
 }

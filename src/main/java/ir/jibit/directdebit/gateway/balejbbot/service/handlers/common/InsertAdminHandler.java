@@ -23,7 +23,7 @@ public class InsertAdminHandler implements AdminConsumerHandler<List<Admin>> {
     @Override
     public void accept(List<Admin> admins) {
         admins.stream().parallel().forEach(admin -> {
-            var result = adminRepository.findById(Long.valueOf(admin.getId()));
+            var result = adminRepository.findById(admin.getId());
             if (result.isEmpty()) {
                 var adminBuilder = ir.jibit.directdebit.gateway.balejbbot.data.entities.Admin.builder()
                         .id(admin.getId())

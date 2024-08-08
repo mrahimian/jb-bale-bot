@@ -10,4 +10,18 @@ public class Award {
     private int code;
     private String description;
     private int requiredScore;
+
+    @Override
+    public String toString() {
+        return "عنوان = '" + name + '\'' +
+                ", کد جایزه = " + code +
+                getDescString() +
+                ", امتیاز مورد نیاز = " + requiredScore;
+
+    }
+
+    private String getDescString() {
+        return getDescription() == null || getDescription().isBlank() ? "" :
+                ", توضیحات = '" + getDescription() + '\'';
+    }
 }

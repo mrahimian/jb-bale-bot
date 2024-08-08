@@ -38,17 +38,31 @@ public class Student {
         this.teacher = teacher;
     }
 
+    public Student(String id, String firstName, String lastName, String birthDate, int score) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.score = score;
+    }
+
     @Override
     public String toString() {
-        return "شناسه ='" + id + '\'' +
-                ", نام ='" + firstName + '\'' +
-                ", نام خانوادگی ='" + lastName + '\'' +
-                ", کدملی ='" + nationalCode + '\'' +
-                ", تاریخ تولد =" + birthDate +
-                ", شماره تلفن ='" + phoneNumber + '\'' +
-                ", شماره تلفن پدر ='" + fathersPhoneNumber + '\'' +
-                ", شماره تلفن مادر ='" + mothersPhoneNumber + '\'' +
-                ", نام مربی ='" + teacher + '\'' +
-                ", امتیاز =" + score;
+        return "شناسه = '" + id +
+                ", نام = '" + firstName +
+                ", نام خانوادگی = '" + lastName +
+                ", کدملی = '" + nationalCode +
+                ", تاریخ تولد = '" + birthDate +
+                ", شماره تلفن = '" + phoneNumber +
+                ", شماره تلفن پدر = '" + fathersPhoneNumber +
+                ", شماره تلفن مادر = '" + mothersPhoneNumber +
+                ", نام مربی = آقای '" + teacher +
+                ", امتیاز = " + score;
+    }
+
+    public String summary() {
+        return "شناسه = " + id +
+                ", نام = " + firstName + " " + lastName +
+                ", امتیاز = " + score;
     }
 }

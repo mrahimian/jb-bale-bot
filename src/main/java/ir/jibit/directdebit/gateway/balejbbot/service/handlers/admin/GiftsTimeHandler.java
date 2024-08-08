@@ -15,7 +15,7 @@ public class GiftsTimeHandler implements AdminConsumerHandler<Boolean> {
 
     @Override
     public void accept(Boolean enable) {
-        var gTime = giftTimeRepository.getReferenceById(0L);
+        var gTime = giftTimeRepository.findById("0").get();
         gTime.setActive(enable);
         giftTimeRepository.save(gTime);
     }

@@ -1,24 +1,20 @@
 package ir.jibit.directdebit.gateway.balejbbot.data.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "gift_time")
 public class GiftTime {
     @Id
-    private int id;
+    private String id;
     private boolean isActive;
-
-    public GiftTime() {
-
-    }
 }

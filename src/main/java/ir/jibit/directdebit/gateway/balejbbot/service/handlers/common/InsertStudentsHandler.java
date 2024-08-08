@@ -20,7 +20,7 @@ public class InsertStudentsHandler implements AdminConsumerHandler<List<Student>
     @Override
     public void accept(List<Student> students) {
         students.stream().parallel().forEach(student -> {
-            var result = studentRepository.findById(Long.valueOf(student.getId()));
+            var result = studentRepository.findById(student.getId());
             if (result.isEmpty()) {
                 var studentBuilder = ir.jibit.directdebit.gateway.balejbbot.data.entities.Student.builder()
                         .id(student.getId())

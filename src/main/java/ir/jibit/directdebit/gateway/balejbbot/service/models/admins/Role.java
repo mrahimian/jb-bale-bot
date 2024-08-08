@@ -14,11 +14,13 @@ public enum Role {
             UPDATE_GIFTS_TIME,
             INSERT_STUDENTS,
             INSERT_ADMINS,
-            INSERT_AWARDS
+            INSERT_AWARDS,
+            FETCH_MY_STUDENTS_LIST
     )),
     TEACHER(List.of(
             FETCH_STUDENTS_LIST,
-            UPDATE_STUDENTS_SCORE
+            UPDATE_STUDENTS_SCORE,
+            FETCH_MY_STUDENTS_LIST
     )),
     MODERATOR(List.of(FETCH_STUDENTS_LIST,
             UPDATE_STUDENTS_SCORE)),

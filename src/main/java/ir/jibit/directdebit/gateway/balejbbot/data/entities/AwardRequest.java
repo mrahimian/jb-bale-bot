@@ -1,11 +1,15 @@
 package ir.jibit.directdebit.gateway.balejbbot.data.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "award_request")
 public class AwardRequest {

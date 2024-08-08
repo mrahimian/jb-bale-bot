@@ -53,7 +53,12 @@ public class CommonController {
     }
 
     public String getAwards(String chatId, boolean isStudent) {
-        return commonApplicationService.getAwards(chatId, isStudent).toString();
+        var awardsString = new StringBuilder();
+        commonApplicationService.getAwards(chatId, isStudent).forEach(award -> {
+            awardsString.append(award.toString()).append("\n");
+        });
+
+        return awardsString.toString();
     }
 
     public String insertStudents(String chatId, String filePath) throws IOException {

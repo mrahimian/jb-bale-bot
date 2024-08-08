@@ -41,7 +41,7 @@ public class StudentController {
 
     public boolean isGiftTimeEnable(String chatId) {
         if (studentRepository.existsStudentByChatId(chatId)) {
-            if (giftTimeRepository.findById(0L).get().isActive()) {
+            if (giftTimeRepository.findById("0").get().isActive()) {
                 return true;
             }
         } else {

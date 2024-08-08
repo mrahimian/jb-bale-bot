@@ -61,8 +61,16 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                } else if (update.getMessage().hasText() && messageText.contains("اطلاعات متربیان")) {
+                } else if (update.getMessage().hasText() && messageText.contains("اطلاعات کامل متربیان")) {
                     var msg = adminController.getStudents(String.valueOf(chatId));
+                    message = SendMessage
+                            .builder()
+                            .chatId(chatId)
+                            .text(msg.toString())
+                            .replyMarkup(setKeyboard())
+                            .build();
+                } else if (update.getMessage().hasText() && messageText.contains("متربیان من")) {
+                    var msg = adminController.getMyStudents(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
                             .chatId(chatId)
@@ -74,7 +82,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                     message = SendMessage
                             .builder()
                             .chatId(chatId)
-                            .text("شناسه متربیانی که قصد امتیاز دادن به آنها دارید را وارد کنید و سپس یک * گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال : 100-101-102 * 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز دریافت کنند.")
+                            .text("شناسه متربیانی که قصد امتیاز دادن به آنها دارید را وارد کنید و سپس یک # گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال :\n 100-101-102 # 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز دریافت کنند.")
                             .replyMarkup(setKeyboard())
                             .build();
                 } else if (update.getMessage().hasText() && messageText.contains("امتیاز منفی")) {
@@ -82,7 +90,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                     message = SendMessage
                             .builder()
                             .chatId(chatId)
-                            .text("شناسه متربیانی که قصد کم کردن امتیاز از آنها دارید را وارد کنید و سپس یک * گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال : 100-101-102 * 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز منفی دریافت کنند.")
+                            .text("شناسه متربیانی که قصد کم کردن امتیاز از آنها دارید را وارد کنید و سپس یک # گذاشته و امتیاز را وارد نمایید.\nشناسه متربیان را با کاراکتر dash(-) از هم جدا کنید.\nمثال :\n 100-101-102 # 3 \nبه این معنی که متربیان با شناسه ۱۰۰ و ۱۰۱ و ۱۰۲ سه امتیاز منفی دریافت کنند.")
                             .replyMarkup(setKeyboard())
                             .build();
                 } else if (update.getMessage().hasText() && messageText.contains("غیر فعال کردن کمد")) {
@@ -224,7 +232,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
 
     private String handleScoreUpdate(String chatId, String messageText, boolean increase) {
         messageText = toEnglishNumbers(messageText.replace(" ", ""));
-        var params = messageText.split("/*");
+        var params = messageText.split("#");
         if (params.length != 2) {
             throw new BotException(INVALID_INPUT);
         }
@@ -244,8 +252,11 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         var row1 = new KeyboardRow();
-        row1.add(new KeyboardButton("اطلاعات متربیان ℹ\uFE0F"));
+        row1.add(new KeyboardButton("اطلاعات کامل متربیان ℹ\uFE0F"));
         row1.add(new KeyboardButton("کمد جوایز \uD83C\uDF81"));
+
+        var row8 = new KeyboardRow();
+        row8.add(new KeyboardButton("متربیان من ℹ\uFE0F"));
 
         var row2 = new KeyboardRow();
         row2.add(new KeyboardButton("امتیاز مثبت ✔\uFE0F"));
@@ -268,6 +279,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
 
 
         keyboard.add(row1);
+        keyboard.add(row8);
         keyboard.add(row2);
         keyboard.add(row3);
         keyboard.add(row4);

@@ -25,11 +25,7 @@ public class UpdateStudentsScoreHandler implements AdminConsumerHandler<UpdateSc
     public void accept(UpdateScoreModel model) {
         Arrays.stream(model.studentIds()).parallel().forEach(studentId -> {
 
-            var student = studentRepository.findById(Long.valueOf(studentId));
-//        var teacherId = model.teacherId();
-//        if (teacherId == null || teacherId.isEmpty() || !teacherId.equals(student.getTeacher().getId())) {
-//            throw new BotException(PERMISSION_DENIED);
-//        }
+            var student = studentRepository.findById(studentId);
             if (student.isEmpty()) {
                 throw new BotException(String.format("متربی با شناسه %s یافت نشد", studentId));
             }

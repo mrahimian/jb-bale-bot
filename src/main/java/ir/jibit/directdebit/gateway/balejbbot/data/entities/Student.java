@@ -34,7 +34,7 @@ public class Student {
     private String mothersPhoneNumber;
     private String teacherId;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private int score;
 
     @CreationTimestamp

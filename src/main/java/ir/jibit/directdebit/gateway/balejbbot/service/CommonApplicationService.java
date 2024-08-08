@@ -29,13 +29,11 @@ public class CommonApplicationService {
     private final AdminConsumerHandler<List<Admin>> insertAdminsHandler;
     private final AdminConsumerHandler<List<Award>> insertAwardsHandler;
     private final Supplier<List<Award>> getAwardsHandler;
-    private final AwardRepository awardRepository;
 
     public CommonApplicationService(StudentRepository studentRepository, AdminRepository adminRepository,
                                     AwardRepository awardRepository) {
         this.studentRepository = studentRepository;
         this.adminRepository = adminRepository;
-        this.awardRepository = awardRepository;
         this.insertStudentsHandler = new InsertStudentsHandler(studentRepository);
         this.insertAdminsHandler = new InsertAdminHandler(adminRepository);
         this.insertAwardsHandler = new InsertAwardsHandler(awardRepository);

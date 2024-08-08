@@ -10,7 +10,7 @@
     </parent>
     <groupId>ir.jibit.directdebit.gateway</groupId>
     <artifactId>bale-jb-bot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>bale-jb-bot</name>
     <description>bale-jb-bot</description>
 

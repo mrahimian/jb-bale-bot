@@ -66,8 +66,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                }
-                if (update.getMessage().hasText() && messageText.contains("دیدن اطلاعات خودم")) {
+                } else if (update.getMessage().hasText() && messageText.contains("دیدن اطلاعات خودم")) {
                     var msg = studentController.getInfo(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
@@ -75,9 +74,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                }
-
-                if (update.getMessage().hasText() && messageText.contains("امتیاز من")) {
+                } else if (update.getMessage().hasText() && messageText.contains("امتیاز من")) {
                     var msg = studentController.getScore(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
@@ -85,9 +82,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                }
-
-                if (update.getMessage().hasText() && messageText.contains("کمد جوایز")) {
+                } else if (update.getMessage().hasText() && messageText.contains("کمد جوایز")) {
                     var msg = commonController.getAwards(String.valueOf(chatId), true);
                     message = SendMessage
                             .builder()
@@ -95,9 +90,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                }
-
-                if (update.getMessage().hasText() && messageText.contains("درخواست جایزه")) {
+                } else if (update.getMessage().hasText() && messageText.contains("درخواست جایزه")) {
                     if (studentController.isGiftTimeEnable(String.valueOf(chatId))) {
                         message = SendMessage
                                 .builder()
@@ -113,24 +106,24 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                                 .replyMarkup(setKeyboard())
                                 .build();
                     }
-                }
+                } else {
+                    if (states.asMap().containsKey(String.valueOf(chatId))) {
+                        switch (states.getIfPresent(String.valueOf(chatId)).getState()) {
+                            case REQUEST_FOR_AWARD -> {
+                                if (!StringUtils.isNumeric(toEnglishNumbers(messageText))) {
+                                    throw new BotException(INVALID_INPUT);
+                                }
 
-                if (states.asMap().containsKey(String.valueOf(chatId))) {
-                    switch (states.getIfPresent(String.valueOf(chatId)).getState()) {
-                        case REQUEST_FOR_AWARD -> {
-                            if (!StringUtils.isNumeric(toEnglishNumbers(messageText))) {
-                                throw new BotException(INVALID_INPUT);
+                                var msg = studentController.requestForAward(String.valueOf(chatId), Integer.parseInt(messageText));
+                                message = SendMessage
+                                        .builder()
+                                        .chatId(chatId)
+                                        .text(msg)
+                                        .replyMarkup(setKeyboard())
+                                        .build();
                             }
-
-                            var msg = studentController.requestForAward(String.valueOf(chatId), Integer.parseInt(messageText));
-                            message = SendMessage
-                                    .builder()
-                                    .chatId(chatId)
-                                    .text(msg)
-                                    .replyMarkup(setKeyboard())
-                                    .build();
+                            default -> {}
                         }
-                        default -> throw new Exception();
                     }
                 }
 
@@ -142,6 +135,7 @@ public class StudentsBot implements LongPollingSingleThreadUpdateConsumer {
                         .replyMarkup(setKeyboard())
                         .build();
             } catch (Exception e) {
+                e.printStackTrace();
                 message = SendMessage
                         .builder()
                         .chatId(chatId)

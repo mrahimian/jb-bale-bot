@@ -20,14 +20,14 @@ public class Initializer implements CommandLineRunner {
     private final AdminRepository adminRepository;
 
     @Override
-    public void run(String... args) throws Exception {
-        if (!giftTimeRepository.existsById(0L)) {
-            giftTimeRepository.save(new GiftTime(0, false));
+    public void run(String... args) {
+        if (!giftTimeRepository.existsById("0")) {
+            giftTimeRepository.save(new GiftTime("0", false));
         }
 
         if (!adminRepository.existsAdminByRole(Role.MANAGER)) {
             adminRepository.save(Admin.builder()
-                    .id(UUID.randomUUID().toString())
+                    .id("1000")
                     .username("rahim")
                     .password(DigestUtils.md5Hex("rahim"))
                     .firstName("محمدرضا")

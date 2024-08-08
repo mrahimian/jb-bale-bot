@@ -5,6 +5,7 @@ import ir.jibit.directdebit.gateway.balejbbot.data.StudentRepository;
 import ir.jibit.directdebit.gateway.balejbbot.service.handlers.AdminSupplierHandler;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class GetStudentsHandler implements AdminSupplierHandler<List<Student>> {
 
     @Override
     public List<Student> get() {
-        return studentRepository.findAll().stream().map(student -> {
-            var teacher = adminRepository.findById(Long.valueOf(student.getTeacherId()));
+        return studentRepository.findAllByOrderByTeacherId().stream().map(student -> {
+            var teacher = adminRepository.findById(student.getTeacherId());
             return new Student(student.getId(),
                     student.getUsername(), null, student.getFirstName(), student.getLastName(), student.getNationalCode(),
                     student.getBirthDate(), student.getPhoneNumber(), student.getFathersPhoneNumber(), student.getMothersPhoneNumber(),
