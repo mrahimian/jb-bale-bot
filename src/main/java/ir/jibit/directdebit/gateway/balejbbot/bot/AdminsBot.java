@@ -61,7 +61,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
                             .text(msg)
                             .replyMarkup(setKeyboard())
                             .build();
-                } else if (update.getMessage().hasText() && messageText.contains("اطلاعات کامل متربیان")) {
+                } else if (update.getMessage().hasText() && messageText.contains("اطلاعات متربیان")) {
                     var msg = adminController.getStudents(String.valueOf(chatId));
                     message = SendMessage
                             .builder()
@@ -252,7 +252,7 @@ public class AdminsBot implements LongPollingSingleThreadUpdateConsumer {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         var row1 = new KeyboardRow();
-        row1.add(new KeyboardButton("اطلاعات کامل متربیان ℹ\uFE0F"));
+        row1.add(new KeyboardButton("اطلاعات متربیان ℹ\uFE0F"));
         row1.add(new KeyboardButton("کمد جوایز \uD83C\uDF81"));
 
         var row8 = new KeyboardRow();

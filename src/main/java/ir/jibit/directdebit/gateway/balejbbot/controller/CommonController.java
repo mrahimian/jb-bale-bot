@@ -7,7 +7,6 @@ import ir.jibit.directdebit.gateway.balejbbot.service.models.Award;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Admin;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -158,7 +157,7 @@ public class CommonController {
             if (counter == 1) continue;
             if (row.getCell(0) == null) continue;
 
-            var id = row.getCell(0) != null ? row.getCell(0).getNumericCellValue() : 0;
+            var id = row.getCell(0) != null ? row.getCell(0).getNumericCellValue() : -1;
             var username = row.getCell(1) != null ? row.getCell(1).getStringCellValue() : "";
             var password = row.getCell(2) != null ? row.getCell(2).getStringCellValue() : "";
             var fName = row.getCell(3) != null ? row.getCell(3).getStringCellValue() : "";
@@ -169,8 +168,10 @@ public class CommonController {
             var role = row.getCell(8) != null ? row.getCell(8).getStringCellValue() : "";
             var groupNumber = row.getCell(9) != null ? row.getCell(9).getNumericCellValue() : 0;
 
-            admins.add(new Admin(String.valueOf(Double.valueOf(id).longValue()), username, password, fName, lName, nationalCode,
-                    birthDate, phoneNumber, Role.valueOf(role.toUpperCase()), (int) groupNumber));
+            if (id > 0) {
+                admins.add(new Admin(String.valueOf(Double.valueOf(id).longValue()), username, password, fName, lName, nationalCode,
+                        birthDate, phoneNumber, Role.valueOf(role.toUpperCase()), (int) groupNumber));
+            }
         }
         return admins;
     }
