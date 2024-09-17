@@ -56,7 +56,7 @@ public class Student {
                 ", شماره تلفن = '" + phoneNumber +
                 ", شماره تلفن پدر = '" + fathersPhoneNumber +
                 ", شماره تلفن مادر = '" + mothersPhoneNumber +
-                ", نام مربی = آقای '" + teacher +
+                ", نام مربی = '" + teacher +
                 ", امتیاز = " + score;
     }
 

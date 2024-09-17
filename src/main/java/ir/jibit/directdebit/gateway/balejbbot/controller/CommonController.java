@@ -7,6 +7,7 @@ import ir.jibit.directdebit.gateway.balejbbot.service.models.Award;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Admin;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.admins.Role;
 import ir.jibit.directdebit.gateway.balejbbot.service.models.students.Student;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -53,9 +54,12 @@ public class CommonController {
 
     public String getAwards(String chatId, boolean isStudent) {
         var awardsString = new StringBuilder();
-        commonApplicationService.getAwards(chatId, isStudent).forEach(award -> {
-            awardsString.append(award.toString()).append("\n");
-        });
+        var awards = commonApplicationService.getAwards(chatId, isStudent);
+        if (awards.isEmpty()){
+            return "متاسفانه جایزه‌ای یافت نشد \uD83D\uDE22";
+        }
+
+        awards.forEach(award -> awardsString.append(award.toString()).append("\n"));
 
         return awardsString.toString();
     }
@@ -135,11 +139,15 @@ public class CommonController {
             var password = row.getCell(2) != null ? row.getCell(2).getStringCellValue() : "";
             var fName = row.getCell(3) != null ? row.getCell(3).getStringCellValue() : "";
             var lName = row.getCell(4) != null ? row.getCell(4).getStringCellValue() : "";
-            var nationalCode = row.getCell(5) != null ? row.getCell(5).getStringCellValue() : "";
+            row.getCell(5).setCellType(CellType.STRING);
+            var nationalCode = row.getCell(5) != null ? row.getCell(5).toString() : "";
             var birthDate = row.getCell(6) != null ? row.getCell(6).getStringCellValue() : "";
-            var phoneNumber = row.getCell(7) != null ? row.getCell(7).getStringCellValue() : "";
-            var fathersPhoneNumber = row.getCell(8) != null ? row.getCell(8).getStringCellValue() : "";
-            var mothersPhoneNumber = row.getCell(9) != null ? row.getCell(9).getStringCellValue() : "";
+            row.getCell(7).setCellType(CellType.STRING);
+            var phoneNumber = row.getCell(7) != null ? row.getCell(7).toString() : "";
+            row.getCell(8).setCellType(CellType.STRING);
+            var fathersPhoneNumber = row.getCell(8) != null ? row.getCell(8).toString() : "";
+            row.getCell(9).setCellType(CellType.STRING);
+            var mothersPhoneNumber = row.getCell(9) != null ? row.getCell(9).toString() : "";
             var teachersId = row.getCell(10) != null ? row.getCell(10).getNumericCellValue() : 0;
 
             students.add(new Student(String.valueOf(Double.valueOf(id).longValue()), username, password, fName, lName, nationalCode, birthDate,
@@ -162,9 +170,9 @@ public class CommonController {
             var password = row.getCell(2) != null ? row.getCell(2).getStringCellValue() : "";
             var fName = row.getCell(3) != null ? row.getCell(3).getStringCellValue() : "";
             var lName = row.getCell(4) != null ? row.getCell(4).getStringCellValue() : "";
-            var nationalCode = row.getCell(5) != null ? row.getCell(5).getStringCellValue() : "";
+            var nationalCode = row.getCell(5) != null ? row.getCell(5).toString() : "";
             var birthDate = row.getCell(6) != null ? row.getCell(6).getStringCellValue() : "";
-            var phoneNumber = row.getCell(7) != null ? row.getCell(7).getStringCellValue() : "";
+            var phoneNumber = row.getCell(7) != null ? row.getCell(7).toString() : "";
             var role = row.getCell(8) != null ? row.getCell(8).getStringCellValue() : "";
             var groupNumber = row.getCell(9) != null ? row.getCell(9).getNumericCellValue() : 0;
 
